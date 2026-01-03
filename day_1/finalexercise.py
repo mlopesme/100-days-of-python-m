@@ -3,6 +3,9 @@
 import random
 from collections import Counter
 import re
+from pathlib import Path
+
+path = Path("./100-days-of-python-m/day_1/english_words.txt").expanduser()
 
 print("Welcome to the Band Name Generator.")
 
@@ -21,17 +24,21 @@ if full_random == "yes":
     need_pet = Counter(pet_name)
     matches = []
     
-    with open("english_words.txt", "r", encoding="utf-8") as f:
+    with open(path, "r", encoding="utf-8") as f:
         for line in f:
             for word in re.findall(r"[A-Za-z]+", line.lower()):
                 have = Counter(word)
-                # if all(have[ch] >= cnt for ch, cnt in need_city.items()):
-                #     matches.append(word)
+                if all(have[ch] >= cnt for ch, cnt in need_city.items()):
+                    matches.append(word)
                 if all(have[ch] >= cnt for ch, cnt in need_pet.items()):
                     matches.append(word)
-    print(matches)
-    a, b = random.sample(matches, 2)
-    print(f"Your band name could be {a} {b}")
+    
+    check_size_ok = len(matches)
+    if check_size_ok < 2:
+        print(f"The english dictionary is not so complete as the words you have choose.\nTherefore, we will only give you the initial choix.\nYour band name could be {city_name} {pet_name}!")
+    else:
+        a, b = random.sample(matches, 2)
+        print(f"Your band name could be {a} {b}")
     
 if random_name_order_selection.lower() == "no" and full_random.lower() == "no":
     print(f"Your band name could be {city_name} {pet_name}!")
